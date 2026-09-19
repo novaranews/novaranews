@@ -1,0 +1,432 @@
+@import '@fontsource/source-sans-3/latin-400.css';
+@import '@fontsource/source-sans-3/latin-600.css';
+@import '@fontsource/source-sans-3/latin-700.css';
+@import '@fontsource/source-sans-3/latin-ext-400.css';
+@import '@fontsource/source-sans-3/latin-ext-600.css';
+@import '@fontsource/source-sans-3/latin-ext-700.css';
+@import '@fontsource/source-serif-4/latin-600.css';
+@import '@fontsource/source-serif-4/latin-700.css';
+@import '@fontsource/source-serif-4/latin-ext-600.css';
+@import '@fontsource/source-serif-4/latin-ext-700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    /* Listing/hero/content: avoid horizontal overflow on very wide assets */
+    main img {
+        max-width: 100%;
+    }
+    :where(a, button, input, select, textarea):focus {
+        outline: none;
+    }
+    :where(a, button, input, select, textarea):focus-visible {
+        @apply ring-2 ring-novara-800/50 ring-offset-2 ring-offset-white dark:ring-sky-400/60 dark:ring-offset-stone-950;
+    }
+
+    /* Tech editorial: very subtle page texture (not a second accent — neutral dots) */
+    body.tech-site-bg {
+        @apply bg-stone-50;
+        background-image: radial-gradient(circle at 1px 1px, rgb(120 113 108 / 0.07) 1px, transparent 0);
+        background-size: 26px 26px;
+    }
+    .dark body.tech-site-bg {
+        @apply bg-stone-950;
+        background-image: radial-gradient(circle at 1px 1px, rgb(168 162 158 / 0.08) 1px, transparent 0);
+    }
+
+    .admin-theme {
+        font-size: 18px;
+        line-height: 1.72;
+        background-color: #f3f5fa;
+    }
+    .admin-theme :where(label, input, select, textarea, button) {
+        line-height: 1.58;
+    }
+    .admin-page-wrap .text-xs {
+        font-size: 0.9rem !important;
+    }
+    .admin-page-wrap .text-sm {
+        font-size: 1rem !important;
+    }
+    .admin-page-wrap :where(input:not([type='checkbox']):not([type='radio']), select, textarea) {
+        font-size: 1rem !important;
+    }
+    .admin-page-wrap :where(th, td) {
+        font-size: 0.98rem;
+    }
+    .admin-page-wrap {
+        background-color: #f4f6fb;
+    }
+    .dark .admin-page-wrap {
+        background-color: #0b1220 !important;
+    }
+    .admin-page-wrap :where(.bg-white, .admin-card, .admin-form-card) {
+        background-color: #fbfcff !important;
+        border-color: #dfe5f0 !important;
+    }
+    .admin-page-wrap .bg-gray-50 {
+        background-color: #f2f5fb !important;
+    }
+    .dark .admin-page-wrap :where(.bg-white, .admin-card, .admin-form-card) {
+        background-color: #111827 !important;
+        border-color: #374151 !important;
+    }
+    .dark .admin-page-wrap .bg-gray-50 {
+        background-color: #1f2937 !important;
+    }
+}
+
+@layer components {
+    /* Admin ayarlar sekmeleri (vanilla JS aria-selected) */
+    [data-nv-admin-tab][aria-selected='true'] {
+        @apply bg-indigo-600 text-white dark:bg-indigo-500;
+    }
+    [data-nv-admin-tab][aria-selected='false'] {
+        @apply bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700;
+    }
+
+    /* Yer imi — kaydedildi (app.js data-saved) */
+    [data-nv-bookmark].nv-bookmark-card[data-saved='true'] {
+        @apply bg-white/95 text-novara-800 dark:bg-stone-900/95 dark:text-sky-400;
+    }
+    [data-nv-bookmark].nv-bookmark-inline[data-saved='true'] {
+        @apply text-novara-800 dark:text-sky-400;
+    }
+
+    .nv-container {
+        @apply mx-auto max-w-6xl px-4 sm:px-5;
+    }
+
+    .nv-page-shell {
+        @apply py-8;
+    }
+
+    .nv-section-title {
+        @apply font-serif text-3xl font-bold text-stone-900 dark:text-stone-100;
+    }
+
+    .nv-kicker {
+        @apply flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400;
+    }
+
+    .nv-kicker-mark {
+        @apply h-3 w-0.5 rounded-full bg-novara-800 dark:bg-sky-400;
+    }
+
+    .nv-surface-card {
+        @apply rounded-xl border border-stone-200 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-stone-300 hover:shadow-md dark:border-stone-700/60 dark:bg-stone-900 dark:hover:border-stone-600;
+    }
+
+    .nv-static-prose {
+        @apply text-base leading-relaxed text-stone-700 dark:text-stone-300
+        [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:border-b [&_h2]:border-stone-200 [&_h2]:pb-1 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-stone-900
+        dark:[&_h2]:border-stone-700 dark:[&_h2]:text-stone-100
+        [&_p]:mb-4
+        [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-6
+        [&_li]:text-stone-700 dark:[&_li]:text-stone-300
+        [&_strong]:font-semibold [&_strong]:text-stone-900 dark:[&_strong]:text-stone-100
+        [&_a]:text-novara-800 [&_a]:underline [&_a:hover]:text-novara-900
+        dark:[&_a]:text-sky-400 dark:[&_a:hover]:text-sky-300;
+    }
+
+    .nv-hero-title {
+        @apply font-serif text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl lg:text-3xl;
+        text-shadow: 0 2px 12px rgb(0 0 0 / 0.75), 0 1px 4px rgb(0 0 0 / 0.6);
+    }
+
+    .nv-hero-excerpt {
+        @apply mt-3 max-w-3xl text-base leading-relaxed text-stone-200 sm:text-base;
+        text-shadow: 0 2px 10px rgb(0 0 0 / 0.85), 0 1px 3px rgb(0 0 0 / 0.7);
+    }
+
+    .nv-hero-meta {
+        text-shadow: 0 2px 8px rgb(0 0 0 / 0.85);
+    }
+
+    .nv-news-kicker {
+        @apply inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/95 backdrop-blur;
+    }
+
+    /* border-b-2 yalnızca active/idle'da: yükleme anında tüm sekmeler seçili görünmesin */
+    .nv-tab-btn {
+        @apply rounded-t-lg px-3 py-2 text-xs font-semibold transition-all sm:px-4 sm:py-2.5 sm:text-sm;
+    }
+
+    .nv-tab-btn-active {
+        @apply border-b-2 border-novara-800 bg-stone-100 text-novara-800 dark:border-sky-400 dark:bg-sky-400/10 dark:text-sky-400;
+    }
+
+    .nv-tab-btn-idle {
+        @apply border-b-2 border-transparent text-stone-500 hover:bg-stone-100/70 hover:text-stone-700 dark:text-stone-400 dark:hover:bg-stone-800/70 dark:hover:text-stone-200;
+    }
+
+    /* Admin sol menü: içerik yüksekliği yetmediğinde kaydırma var, çubuk gizli (tekerlek/dokunma çalışır) */
+    .nv-admin-nav-scroll {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .nv-admin-nav-scroll::-webkit-scrollbar {
+        display: none;
+    }
+
+    /*
+     * Ana sayfa sekmeleri — HTML radio + label (Alpine/Vite gerekmez).
+     */
+    .nv-icon-btn {
+        @apply inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-stone-500 transition hover:bg-stone-100 hover:text-stone-700 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-200 sm:h-9 sm:w-9;
+    }
+
+    .nv-icon-btn-sm {
+        @apply inline-flex h-6 w-6 items-center justify-center rounded-md text-stone-400 transition hover:bg-stone-100 hover:text-stone-600 dark:hover:bg-stone-800 dark:hover:text-stone-300;
+    }
+
+    .nv-icon-btn-lg {
+        @apply inline-flex h-10 w-10 items-center justify-center rounded-lg text-stone-500 transition hover:bg-stone-100 dark:hover:bg-stone-800;
+    }
+
+    .nv-btn {
+        @apply inline-flex items-center justify-center rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm font-semibold text-stone-700 transition hover:bg-stone-100 dark:border-stone-600 dark:bg-stone-900 dark:text-stone-200 dark:hover:bg-stone-800;
+    }
+
+    .nv-btn-primary {
+        @apply inline-flex items-center justify-center rounded-lg bg-novara-800 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-stone-900 dark:bg-sky-600 dark:hover:bg-sky-700;
+    }
+
+    .nv-chip-btn {
+        @apply inline-flex items-center rounded-full border border-stone-300 bg-white px-4 py-1.5 text-sm font-medium text-stone-700 transition hover:border-novara-800 hover:text-novara-800 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-300 dark:hover:border-sky-400 dark:hover:text-sky-400;
+    }
+
+    .nv-chip-muted-btn {
+        @apply inline-flex items-center gap-1.5 rounded-full border border-stone-200 bg-stone-50 px-3 py-1.5 text-xs font-medium text-stone-600 transition hover:border-stone-400 hover:text-stone-900 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-400 dark:hover:text-stone-100;
+    }
+
+    .nv-avatar-xs {
+        @apply h-4 w-4 shrink-0 rounded-full bg-stone-100 object-cover object-center ring-1 ring-stone-200 dark:bg-stone-800 dark:ring-stone-700;
+    }
+    .nv-avatar-sm {
+        @apply h-5 w-5 shrink-0 rounded-full bg-stone-100 object-cover object-center ring-1 ring-stone-200 dark:bg-stone-800 dark:ring-stone-700;
+    }
+    .nv-avatar-md {
+        @apply h-14 w-14 shrink-0 rounded-full bg-stone-100 object-cover object-center ring-2 ring-stone-200 dark:bg-stone-800 dark:ring-stone-700;
+    }
+    .nv-avatar-lg {
+        @apply h-24 w-24 shrink-0 rounded-full bg-stone-100 object-cover object-center ring-2 ring-stone-200 dark:bg-stone-800 dark:ring-stone-700;
+    }
+    .nv-avatar-xl {
+        @apply h-28 w-28 shrink-0 rounded-full bg-stone-100 object-cover object-center ring-4 ring-stone-300/60 dark:bg-stone-800 dark:ring-stone-700/70;
+    }
+    .nv-avatar-fallback-xs {
+        @apply inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[8px] font-bold text-white select-none;
+    }
+    .nv-avatar-fallback-sm {
+        @apply inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-bold text-white select-none;
+    }
+
+    .nv-social-btn {
+        @apply inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200 bg-stone-50 text-stone-700 transition hover:border-novara-800 hover:text-novara-800 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-300 dark:hover:border-sky-400 dark:hover:text-sky-400;
+    }
+
+    .nv-ticker-btn {
+        @apply inline-flex h-8 w-8 items-center justify-center rounded-md text-white/90 transition hover:bg-white/15 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80;
+    }
+
+    .nv-fab-btn {
+        @apply inline-flex h-11 w-11 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 shadow-lg transition hover:border-novara-300 hover:text-novara-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-novara-800/40 dark:border-stone-600 dark:bg-stone-800 dark:text-stone-200 dark:hover:border-sky-500 dark:hover:text-sky-300 dark:focus-visible:ring-sky-400/40;
+    }
+
+    .nv-carousel-nav-btn {
+        @apply pointer-events-auto absolute top-1/2 z-20 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-stone-200 bg-white/95 text-stone-600 shadow-md transition hover:border-novara-300 hover:text-novara-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-novara-800/30 dark:border-stone-600 dark:bg-stone-800/95 dark:text-stone-200 dark:hover:border-sky-500 dark:hover:text-sky-300 sm:h-9 sm:w-9 md:h-10 md:w-10;
+    }
+
+    .nv-carousel-nav-btn-accent {
+        @apply pointer-events-auto absolute top-1/2 z-20 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-violet-200 bg-white/95 text-violet-700 shadow-md transition hover:border-fuchsia-400 hover:text-fuchsia-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500/40 dark:border-violet-800 dark:bg-stone-800/95 dark:text-fuchsia-200 dark:hover:border-fuchsia-500 sm:h-9 sm:w-9 md:h-10 md:w-10;
+    }
+
+    .nv-reveal {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .nv-reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .admin-page-wrap {
+        @apply py-6;
+    }
+
+    .admin-shell {
+        @apply mx-auto space-y-6 px-4 sm:px-6 lg:px-8;
+    }
+
+    .admin-card {
+        @apply overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900;
+    }
+
+    .admin-form-card {
+        @apply space-y-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900 sm:p-6;
+    }
+
+    .admin-toolbar {
+        @apply flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .admin-btn {
+        @apply inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700 sm:px-4 sm:py-2;
+    }
+
+    .admin-btn-primary {
+        @apply inline-flex items-center rounded-md bg-gray-800 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gray-700 dark:bg-indigo-600 dark:hover:bg-indigo-500 sm:px-4 sm:py-2;
+    }
+
+    .admin-btn-danger {
+        @apply inline-flex items-center rounded-md bg-red-700 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-500 sm:px-4 sm:py-2;
+    }
+
+    .admin-btn-info {
+        @apply inline-flex items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 sm:px-4 sm:py-2;
+    }
+
+    .admin-btn-success {
+        @apply inline-flex items-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-green-500 dark:bg-emerald-600 dark:hover:bg-emerald-500 sm:px-4 sm:py-2;
+    }
+
+    .admin-tab-btn {
+        @apply inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700;
+    }
+    .admin-tab-btn.is-active {
+        @apply border-indigo-600 bg-indigo-600 text-white dark:border-indigo-500 dark:bg-indigo-500;
+    }
+
+    .admin-btn-warning {
+        @apply inline-flex items-center rounded-md bg-amber-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-400 sm:px-4 sm:py-2;
+    }
+
+    .admin-btn-soft-warning {
+        @apply inline-flex items-center rounded-md border border-yellow-400 bg-yellow-50 px-3 py-1.5 text-sm font-medium text-yellow-800 transition hover:bg-yellow-100 dark:border-yellow-600 dark:bg-yellow-500/10 dark:text-yellow-300 dark:hover:bg-yellow-500/20 sm:py-2;
+    }
+
+    .admin-btn-soft-danger {
+        @apply inline-flex items-center rounded-md border border-red-300 bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 transition hover:bg-red-100 dark:border-red-600 dark:bg-red-500/10 dark:text-red-300 dark:hover:bg-red-500/20 sm:py-2;
+    }
+
+    .admin-table-wrap {
+        @apply overflow-x-auto rounded-lg bg-white shadow-sm dark:bg-gray-900;
+    }
+
+    /* Admin dark compatibility layer for legacy inline utilities */
+    .dark .admin-page-wrap .bg-white {
+        @apply bg-gray-900;
+    }
+    .dark .admin-page-wrap .bg-gray-50 {
+        @apply bg-gray-800;
+    }
+    .dark .admin-page-wrap .bg-gray-100 {
+        @apply bg-gray-800;
+    }
+    .dark .admin-page-wrap .border-gray-100 {
+        @apply border-gray-800;
+    }
+    .dark .admin-page-wrap .border-gray-200 {
+        @apply border-gray-700;
+    }
+    .dark .admin-page-wrap .border-gray-300 {
+        @apply border-gray-600;
+    }
+    .dark .admin-page-wrap .divide-gray-100 {
+        @apply divide-gray-800;
+    }
+    .dark .admin-page-wrap .divide-gray-200 {
+        @apply divide-gray-700;
+    }
+    .dark .admin-page-wrap .text-gray-900 {
+        color: rgb(243 244 246);
+    }
+    .dark .admin-page-wrap .text-gray-800 {
+        color: rgb(243 244 246);
+    }
+    .dark .admin-page-wrap .text-gray-700 {
+        color: rgb(229 231 235);
+    }
+    .dark .admin-page-wrap .text-gray-600 {
+        color: rgb(209 213 219);
+    }
+    .dark .admin-page-wrap .text-gray-500 {
+        color: rgb(156 163 175);
+    }
+    .dark .admin-page-wrap .text-gray-400 {
+        color: rgb(107 114 128);
+    }
+    .dark .admin-theme .text-gray-900 {
+        color: rgb(243 244 246);
+    }
+    .dark .admin-theme .text-gray-800 {
+        color: rgb(243 244 246);
+    }
+    .dark .admin-theme .text-gray-700 {
+        color: rgb(229 231 235);
+    }
+    .dark .admin-theme .text-gray-600 {
+        color: rgb(209 213 219);
+    }
+    .dark .admin-page-wrap .hover\:bg-gray-50:hover {
+        @apply bg-gray-800;
+    }
+    .dark .admin-page-wrap .hover\:bg-gray-100:hover {
+        @apply bg-gray-700;
+    }
+    .dark .admin-page-wrap .hover\:bg-gray-200:hover {
+        @apply bg-gray-700;
+    }
+    .dark .admin-page-wrap :where(input:not([type='checkbox']):not([type='radio']), select, textarea) {
+        border-color: rgb(75 85 99);
+        background-color: rgb(31 41 55);
+        color: rgb(243 244 246);
+    }
+    .dark .admin-page-wrap :where(input:not([type='checkbox']):not([type='radio']), select, textarea)::placeholder {
+        color: rgb(156 163 175);
+    }
+    .dark .admin-page-wrap :where(input[type='checkbox'], input[type='radio']) {
+        @apply border-gray-600 bg-gray-800 text-indigo-400;
+    }
+    .dark .admin-page-wrap :where(input, select, textarea):focus {
+        @apply border-indigo-400 ring-indigo-400;
+    }
+}
+
+/* Article body: dot surface + monospace code (tech readability) */
+.tech-article-body {
+    @apply relative isolate overflow-hidden rounded-2xl border border-stone-200/90 px-4 py-6 dark:border-stone-700/80 sm:px-6;
+    background-color: rgb(250 250 249 / 0.92);
+    background-image: radial-gradient(circle at 1px 1px, rgb(120 113 108 / 0.12) 1px, transparent 0);
+    background-size: 18px 18px;
+}
+.dark .tech-article-body {
+    background-color: rgb(12 10 9 / 0.45);
+    background-image: radial-gradient(circle at 1px 1px, rgb(168 162 158 / 0.12) 1px, transparent 0);
+}
+.tech-article-body > * {
+    @apply relative z-10;
+}
+.tech-article-body :where(pre, code, kbd, samp) {
+    @apply font-mono text-[0.95em];
+}
+.tech-article-body pre {
+    @apply overflow-x-auto rounded-lg border border-stone-200 bg-stone-100 p-4 text-sm dark:border-stone-600 dark:bg-stone-900;
+}
+.tech-article-body :not(pre) > code {
+    @apply rounded bg-stone-200/90 px-1.5 py-0.5 text-[0.9em] dark:bg-stone-800;
+}
+
+@layer utilities {
+    /* Döviz / Breaking ticker: hover ile durakla */
+    .novara-ticker {
+        animation: ticker 50s linear infinite;
+    }
+    .novara-ticker:hover {
+        animation-play-state: paused;
+    }
+}

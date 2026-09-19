@@ -1,0 +1,41 @@
+name: Bug report
+description: Report reproducible behavior that appears to be incorrect
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Please do not report security vulnerabilities here. Follow SECURITY.md instead.
+  - type: input
+    id: version
+    attributes:
+      label: NovaNews version or commit
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: PHP, database, operating system, web server, and browser versions
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and relevant logs
+      description: Remove credentials, tokens, personal data, and private content before posting.
+    validations:
+      required: true
+
