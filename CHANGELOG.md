@@ -6,9 +6,16 @@ The project follows [Semantic Versioning](https://semver.org/). Until version 1.
 
 ## Unreleased
 
+## 0.1.1 — 2026-09-20
+
+### Changed
+
 - Expanded CI coverage across supported PHP versions.
 - Added clean-install verification and production deployment guidance.
 - Standardized developer-facing documentation and operational messages in English.
+
+### Security
+
 - Enabled GitHub private vulnerability reporting and automated dependency security updates.
 
 ## 0.1.0 — 2026-09-20
