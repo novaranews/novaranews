@@ -68,10 +68,10 @@
         @endif
     @endauth
 
-    {{-- Masaüstü yapıcı düzen: article + sticky sosyal sidebar --}}
+    {{-- Desktop layout: article plus a sticky social sidebar. --}}
     <div class="relative mx-auto max-w-3xl xl:max-w-none xl:grid xl:grid-cols-[1fr_48px] xl:gap-6 2xl:grid-cols-[1fr_56px]">
 
-    {{-- Sabit sosyal paylaşım çubuğu (sadece masaüstünde, xl ve üzeri) --}}
+    {{-- Sticky share bar for desktop viewports (xl and above). --}}
     <aside
         class="hidden xl:flex xl:flex-col xl:items-center xl:gap-3 xl:sticky xl:top-24 xl:self-start xl:h-fit xl:pt-16 xl:col-start-2 xl:row-start-1"
         aria-label="{{ __('site.share_article') }}"

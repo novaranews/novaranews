@@ -96,7 +96,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Contact form (e-posta alıcısı; boşsa Mail gönderilmez, yine de form çalışır)
+    | Contact form (recipient address; the form still works without sending mail when empty)
     |--------------------------------------------------------------------------
     */
     'contact_mail_to' => null,
@@ -115,8 +115,8 @@ return [
     /*
     |--------------------------------------------------------------------------
     | Makale URL’sinin ilk segmenti: /{locale}/{segment}/{article-slug}
-    | İçerik türüne göre farklı segment (haber / rehber / analiz / inceleme …).
-    | Her dil için çeviri; kategori ve diğer tür segmentleriyle çakışmaması gerekir.
+    | A distinct segment for each content type (news, guide, analysis, review, and so on).
+    | Localized per language; values must not collide with category or other type segments.
     |--------------------------------------------------------------------------
     */
     'article_path_segment_by_content_type' => [
@@ -153,7 +153,7 @@ return [
     /*
     |--------------------------------------------------------------------------
     | Kategori listesi URL’sinin ilk segmenti: /{locale}/{segment}/{category-slug}
-    | Makale ve kategori slug’larıyla çakışmaması gerekir (makale URL segmentleriyle farklı olmalı).
+    | Must not collide with article or category slugs, including article URL segments.
     |--------------------------------------------------------------------------
     */
     'category_path_segment' => [

@@ -74,7 +74,7 @@
         @endif
     </form>
 
-    {{-- Yorum formlarıyla aynı: site key yoksa reCAPTCHA yok; aksi halde submit hep preventDefault olur ve form hiç gitmez. --}}
+    {{-- Match comment forms: omit reCAPTCHA when no site key exists, otherwise submit would always be prevented. --}}
     @if($recaptchaSiteKey)
     @include('site.partials.recaptcha-badge-style')
     <script src="https://www.google.com/recaptcha/api.js?render={{ $recaptchaSiteKey }}"></script>

@@ -23,7 +23,7 @@
     <div class="{{ $rootClass }}">
     @endif
 
-        {{-- Image: contain = kutuya tam sığar, kırpma olmaz --}}
+        {{-- contain fits the entire image in the box without cropping. --}}
         <div class="relative flex aspect-video shrink-0 items-center justify-center overflow-hidden bg-stone-100 dark:bg-stone-800">
             @if($a->featured_image)
                 @php

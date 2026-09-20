@@ -55,13 +55,13 @@ $categoryPathSegments = array_values(array_unique(array_filter(
 )));
 $categoryPrefixPattern = $categoryPathSegments !== [] ? implode('|', $categoryPathSegments) : 'category';
 
-// ── MCP sunucusu — AI ajanları için JSON-RPC endpoint ────────────────────────
+// ── MCP server: JSON-RPC endpoint for AI agents ──────────────────────────────
 Route::post('/mcp', [McpController::class, 'handle'])->middleware(['web', 'throttle:60,1'])->name('mcp');
 Route::get('/robots.txt', RobotsTxtController::class)->name('robots');
 
-// ── CSRF token yenileme — cache'lenmiş sayfalardaki formlar için ─────────────
-// POST olduğu için FastCGI ve Cloudflare asla cache'lemez.
-// CSRF doğrulaması dışında (bootstrap/app.php → validateCsrfTokens except).
+// ── CSRF token refresh for forms rendered from cached pages ──────────────────
+// FastCGI and Cloudflare never cache it because it uses POST.
+// Excluded from CSRF validation in bootstrap/app.php.
 Route::post('/novara-csrf', function () {
     return response()->json(['token' => csrf_token()])
         ->header('Cache-Control', 'no-store, private');

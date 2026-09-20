@@ -1,8 +1,8 @@
 {{-- ── Cookie Consent Banner ─────────────────────────────────────────────────
      localStorage key : novara_consent  →  'all' | 'essential'
-     'all'       → GA4 (kişisel) + AdSense (kişisel) yüklenir
-     'essential' → GA4 yüklenmez, AdSense npa=1 (kişiselleştirilmemiş) yüklenir
-     Her iki durumda da reklamlar gösterilir, yalnızca hedefleme türü değişir.
+     'all'       → load GA4 and personalized AdSense
+     'essential' → skip GA4 and load non-personalized AdSense with npa=1
+     Ads are shown in both cases; only the targeting mode changes.
 ──────────────────────────────────────────────────────────────────────────── --}}
 <div
     id="nv-cookie-banner"
@@ -42,18 +42,18 @@
     var CONSENT_KEY = 'novara_consent';
     var consent     = localStorage.getItem(CONSENT_KEY);
 
-    /** GA4 ve/veya AdSense'i consent türüne göre yükle */
+    /** Load GA4 and/or AdSense according to the consent type. */
     function loadThirdParty(type) {
         if (type === 'all' && typeof window._loadGA4 === 'function') {
             window._loadGA4();
         }
-        // Her iki durumda da AdSense yüklenir; 'all' → personalized, diğeri → npa=1
+        // Load AdSense in both modes: personalized for all, npa=1 otherwise.
         if (typeof window._setAdSenseConsent === 'function') {
             window._setAdSenseConsent(type);
         }
     }
 
-    /** Seçimi kaydet, banner'ı gizle, scriptleri yükle */
+    /** Save the choice, hide the banner, and load scripts. */
     function setConsent(value) {
         try { localStorage.setItem(CONSENT_KEY, value); } catch (e) {}
         var banner = document.getElementById('nv-cookie-banner');
@@ -61,11 +61,11 @@
         loadThirdParty(value);
     }
 
-    // Daha önce consent verilmişse hemen yükle, banner gösterme
+    // Load immediately and keep the banner hidden when consent already exists.
     if (consent) {
         loadThirdParty(consent);
     } else {
-        // Banner'ı DOM hazır olunca göster
+        // Show the banner after the DOM is ready.
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function () {
                 var banner = document.getElementById('nv-cookie-banner');

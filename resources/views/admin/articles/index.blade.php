@@ -158,7 +158,7 @@
                     @endforeach
                 </select>
                 <select name="content_type" class="rounded border-gray-300 text-sm shadow-sm dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100">
-                    <option value="">Tüm türler</option>
+                    <option value="">All types</option>
                     @foreach(\App\Models\Article::CONTENT_TYPES as $ct)
                         <option value="{{ $ct }}" @selected($contentType === $ct)>{{ ucfirst($ct) }}</option>
                     @endforeach
@@ -297,7 +297,7 @@
     @once
         @push('scripts')
             <script>
-                // Inline status değiştirme
+                // Inline status update.
                 document.querySelectorAll('.js-inline-status').forEach(function (sel) {
                     sel.addEventListener('change', function () {
                         const id = sel.getAttribute('data-article-id');

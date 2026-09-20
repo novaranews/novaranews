@@ -36,7 +36,7 @@ if (! function_exists('page_url')) {
 if (! function_exists('article_path_segment')) {
     /**
      * Public makale URL’sinin ilk path segmenti: /{locale}/{segment}/{slug}
-     * İçerik türüne göre değişir (news → haber/news, guide → rehber/guide, …).
+     * Varies by content type (news, guide, analysis, review, and so on).
      *
      * @param  string|null  $contentType  Article::CONTENT_TYPES biri; null ise news.
      */
@@ -69,7 +69,7 @@ if (! function_exists('article_path_segment')) {
 if (! function_exists('category_path_segment')) {
     /**
      * Public kategori listesi URL’sinin ilk path segmenti: /{locale}/{segment}/{category-slug}
-     * Örn. tr → kategori, en → category, de → kategorie
+     * For example: tr → kategori, en → category, de → kategorie.
      */
     function category_path_segment(?string $locale = null): string
     {

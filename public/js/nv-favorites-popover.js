@@ -1,6 +1,6 @@
 /**
- * Header favorites popover — app.js (Vite) yüklenmese de çalışır.
- * app.js ile aynı localStorage anahtarı: novara-bookmarks
+ * Header favorites popover. It works even when app.js (Vite) is unavailable.
+ * Uses the same localStorage key as app.js: novara-bookmarks.
  */
 (function () {
     var KEY = 'novara-bookmarks';

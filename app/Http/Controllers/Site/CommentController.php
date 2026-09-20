@@ -13,7 +13,7 @@ class CommentController extends Controller
 {
     public function store(Request $request, string $locale, Article $article, RecaptchaVerifier $recaptcha): RedirectResponse
     {
-        // Sadece yayındaki haberlere yorum yapılabilir
+        // Comments are accepted only for published articles.
         if ($article->status !== 'published') {
             abort(404);
         }
@@ -29,7 +29,7 @@ class CommentController extends Controller
             'parent_id' => ['nullable', 'integer', 'exists:comments,id'],
         ]);
 
-        // parent_id varsa sadece aynı habere ait ve onaylanmış yoruma yanıt verilebilir
+        // A reply must target an approved comment on the same article.
         if (! empty($validated['parent_id'])) {
             $parent = Comment::find($validated['parent_id']);
             if (! $parent || $parent->article_id !== $article->id || ! $parent->approved || $parent->parent_id !== null) {

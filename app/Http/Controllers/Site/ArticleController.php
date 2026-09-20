@@ -177,7 +177,7 @@ class ArticleController extends Controller
             }
         }
 
-        // Onaylı yorumlar (sadece üst yorumlar, yanıtları eager load ile)
+        // Approved top-level comments with replies eager-loaded.
         $comments = Comment::where('article_id', $article->id)
             ->whereNull('parent_id')
             ->where('approved', true)

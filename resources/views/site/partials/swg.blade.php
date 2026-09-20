@@ -1,6 +1,6 @@
 {{-- ── Google Reader Revenue Manager (Subscribe with Google Basic) ──────────
-     Her dil için ayrı Publisher Center publication ID'si kullanılır.
-     lang + isPartOfProductId locale'e göre otomatik seçilir.
+     Each locale uses its own Publisher Center publication ID.
+     lang and isPartOfProductId are selected automatically from the locale.
 ─────────────────────────────────────────────────────────────────────────── --}}
 @php
 $swgIds = [

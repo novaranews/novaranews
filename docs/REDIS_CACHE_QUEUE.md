@@ -1,13 +1,13 @@
-# Redis, önbellek ve kuyruk (üretim önerisi)
+# Redis, cache, and queues in production
 
-Bu proje varsayılan olarak **dosya / veritabanı** sürücüleriyle çalışır. Trafik veya çoklu worker ihtiyacında **Redis** kullanmak yaygın bir adımdır.
+NovaNews uses file and database drivers by default. Redis is a common next step when traffic grows, multiple application instances need shared state, or background workers need higher throughput.
 
-## 1. Sunucu
+## 1. Server requirements
 
-- Redis servisi kurulu ve dinliyor olmalı (ör. `127.0.0.1:6379`).
-- PHP tarafında genelde **phpredis** eklentisi veya Composer ile **`predis/predis`** kullanılır (Laravel dokümantasyonuna göre tercih).
+- A Redis service must be installed and listening, commonly on `127.0.0.1:6379`.
+- PHP normally connects through the **phpredis** extension or the Composer package **`predis/predis`**. Choose the client supported by your deployment environment.
 
-## 2. `.env` örnekleri
+## 2. Example `.env` configuration
 
 ```env
 REDIS_HOST=127.0.0.1
@@ -19,32 +19,36 @@ SESSION_DRIVER=redis
 QUEUE_CONNECTION=redis
 ```
 
-Deploy sonrası:
+Refresh the cached configuration after deployment:
 
 ```bash
 php artisan config:cache
 ```
 
-## 3. Kuyruk worker
+## 3. Queue worker
 
-Cron ile `schedule:run` kullanıyorsanız, kuyruk işleri için ayrıca süreç gerekir:
+Laravel's scheduler does not process queued jobs. Run a separate queue worker when queues are enabled:
 
 ```bash
 php artisan queue:work redis --sleep=3 --tries=3
 ```
 
-(systemd, Supervisor veya benzeri ile sürekli çalıştırın.)
+Keep the worker running under systemd, Supervisor, or a comparable process manager. On shared hosting that prohibits persistent workers, use a short-lived `queue:work --stop-when-empty` command from an allowed cron interval instead.
 
-## 4. Ne zaman gerekir?
+## 4. When Redis helps
 
-- Oturumların birden fazla uygulama örneği arasında paylaşılması.
-- Rate limit / cache için kalıcı ve hızlı depolama.
-- Uzun süren işler (e-posta, RSS, AI taslakları) için **queue**.
+- Sharing sessions across multiple application instances.
+- Providing fast, persistent storage for rate limits and application caches.
+- Processing long-running work such as email, RSS ingestion, and AI drafts.
 
-İçerik az ve tek sunucuysa, başlangıçta **dosya cache + `database` session** da yeterli olabilir; Redis “büyüme” adımıdır.
+For a small single-server installation, file cache and database-backed sessions and queues are a reasonable starting point. Redis is an optional scaling step.
 
-## 5. Deploy ve site önbelleği
+## 5. Deployment and site cache
 
-`docs/deploy.sh` içinde `optimize:clear` sonrası seeder bittikten sonra **`php artisan cache:clear`** çalıştırılır. Bu, Redis veya `file` sürücüsündeki uygulama önbelleğini (ör. `site.home.data.{locale}`, `site.nav.categories`) temizler; yeni içerik ve kategori/statik senkron sonrası ana sayfanın eski veriyi göstermesini azaltır.
+Clear the application cache after synchronizing seeded content so home-page, navigation, category, and static-page caches cannot retain stale values:
 
-Makale kaydı/silindiğinde `ArticleObserver` da aynı anahtarları temizler.
+```bash
+php artisan cache:clear
+```
+
+`ArticleObserver` also clears relevant cache keys when an article is saved or deleted.

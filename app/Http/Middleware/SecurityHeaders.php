@@ -16,8 +16,8 @@ class SecurityHeaders
         /** @var Response $response */
         $response = $next($request);
 
-        // XML / plain-text yanıtlara (sitemap, robots.txt, rss, ads.txt) yalnızca
-        // HSTS ve nosniff ekle; HTML'e özgü CSP/X-Frame-Options/Permissions-Policy ekleme.
+        // Add only HSTS and nosniff to XML/plain-text responses such as sitemaps,
+        // robots.txt, RSS, and ads.txt. HTML-only headers do not apply to them.
         $contentType = (string) $response->headers->get('Content-Type', '');
         $isHtml = str_contains($contentType, 'text/html') || $contentType === '';
 
@@ -26,10 +26,10 @@ class SecurityHeaders
             $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
             $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
             $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=(), payment=()');
-            $response->headers->set('X-XSS-Protection', '0'); // Modern tarayıcılarda CSP tercih edilir, legacy header kapatılır
+            $response->headers->set('X-XSS-Protection', '0'); // Prefer CSP in modern browsers and disable the legacy header.
 
-            // Content Security Policy — XSS riskini ciddi ölçüde azaltır
-            // 'unsafe-inline' Vite için. 'unsafe-eval' yalnızca admin (TinyMCE); public sitede Alpine yok.
+            // Content Security Policy substantially reduces XSS risk.
+            // Vite requires unsafe-inline. Only admin pages (TinyMCE) receive unsafe-eval.
             // connect-src: GA4 often posts to region hosts (e.g. region1.analytics.google.com); list exact + wildcards per Google Tag CSP guidance.
             $isAdminPath = str_starts_with($request->path(), 'admin');
             $unsafeEval = $isAdminPath ? " 'unsafe-eval'" : '';

@@ -1,4 +1,4 @@
-{{-- İçerik türü / dil / slug değişince canonical_url (readonly) güncellenir --}}
+{{-- Update the read-only canonical_url when content type, locale, or slug changes. --}}
 @php
     $baseUrl = rtrim(url('/'), '/');
     $defaultLocale = config('novaranews.default_locale', 'en');

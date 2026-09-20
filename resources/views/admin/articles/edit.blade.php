@@ -49,7 +49,7 @@
                         @endforeach
                     </ul>
                 @endif
-                {{-- publicUrl() boş locale ile app()->getLocale() kullanır; admin genelde en → TR makalede link kaybolur. --}}
+                {{-- publicUrl() falls back to app()->getLocale(); pass the article locale so links remain available in every admin locale. --}}
                 @php
                     $article->loadMissing('translations');
                     $publishLinks = $article->translations
@@ -207,7 +207,7 @@
                 @endif
                 <div data-admin-article-panel="image">
                     <x-input-label for="featured_image_picker" :value="__('site.admin_replace_featured_image')" />
-                    <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">Google News: min 1200×628 px · 16:9 oran önerilir</p>
+                    <p class="mb-1 text-xs text-gray-500 dark:text-gray-400">Google News: minimum 1200×628 px · 16:9 recommended</p>
                     <input id="featured_image_picker" type="file" accept="image/*" class="mt-1 block w-full text-sm" />
                     {{-- Hidden input that carries the cropped blob to the server --}}
                     <input id="featured_image" name="featured_image" type="file" class="hidden" />
@@ -215,8 +215,8 @@
 
                     {{-- Crop preview thumbnail --}}
                     <div id="crop-preview-wrap" class="mt-2 hidden">
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Kırpma önizlemesi:</p>
-                        <img id="crop-preview-img" src="" alt="Kırpma önizlemesi"
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Crop preview:</p>
+                        <img id="crop-preview-img" src="" alt="Crop preview"
                             class="mt-1 h-24 w-auto rounded border border-gray-300 dark:border-gray-600" />
                         <p id="crop-dims" class="mt-1 text-xs text-green-600 dark:text-green-400"></p>
                     </div>
@@ -226,22 +226,22 @@
                 <div id="cropper-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 p-4">
                     <div class="flex w-full max-w-3xl flex-col rounded-lg bg-white shadow-2xl dark:bg-gray-900">
                         <div class="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700">
-                            <h3 class="font-semibold text-gray-900 dark:text-gray-100">Görseli Kırp — Google News (1200×628 · 16:9)</h3>
+                            <h3 class="font-semibold text-gray-900 dark:text-gray-100">Crop image — Google News (1200×628 · 16:9)</h3>
                             <button type="button" id="cropper-cancel" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">✕</button>
                         </div>
                         <div class="max-h-[60vh] overflow-hidden bg-gray-100 dark:bg-gray-800">
                             <img id="cropper-source" src="" alt="" class="block max-w-full" />
                         </div>
                         <div class="flex items-center justify-between gap-3 border-t border-gray-200 px-4 py-3 dark:border-gray-700">
-                            <span class="text-xs text-gray-500 dark:text-gray-400">Kırpma alanını sürükleyip yeniden boyutlandırabilirsiniz.</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">Drag and resize the crop area.</span>
                             <div class="flex gap-2">
                                 <button type="button" id="cropper-cancel-btn"
                                     class="rounded border border-gray-300 bg-white px-4 py-1.5 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">
-                                    İptal
+                                    Cancel
                                 </button>
                                 <button type="button" id="cropper-apply"
                                     class="rounded bg-indigo-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-indigo-700">
-                                    Kırpmayı Uygula
+                                    Apply crop
                                 </button>
                             </div>
                         </div>
@@ -326,8 +326,8 @@
                             <x-input-label for="hreflang_group" value="Hreflang Grubu" />
                             <x-text-input id="hreflang_group" name="hreflang_group" type="text" class="mt-1 block w-full font-mono"
                                 :value="old('hreflang_group', $article->hreflang_group)"
-                                placeholder="örn: ai-job-2026" maxlength="100" />
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Aynı grubu paylaşan farklı dillerdeki makaleler otomatik olarak hreflang ile birbirine bağlanır.</p>
+                                placeholder="e.g. ai-job-2026" maxlength="100" />
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Articles in different languages that share this group are linked automatically with hreflang.</p>
                             <x-input-error :messages="$errors->get('hreflang_group')" class="mt-2" />
                         </div>
                         <div data-admin-article-panel="seo">
@@ -445,7 +445,7 @@
                             height: 640,
                             min_height: 480,
                             menubar: false,
-                            /* autoresize kaldırıldı: iframe içinde kaydırma olması için; aksi halde toolbar_sticky çalışmaz */
+                            /* Keep autoresize disabled so the iframe can scroll and toolbar_sticky remains functional. */
                             plugins: 'link lists code image',
                             toolbar: 'undo redo | blocks | bold italic underline | bullist numlist | link image | code removeformat',
                             toolbar_sticky: true,
@@ -471,7 +471,7 @@
                                     })
                                     .then(function (r) { return r.ok ? r.json() : Promise.reject(r); })
                                     .then(function (data) { resolve(data.location); })
-                                    .catch(function () { reject('Görsel yüklenemedi'); });
+                                    .catch(function () { reject('Image upload failed'); });
                                 });
                             },
                         });
@@ -584,7 +584,7 @@
 
                             // Show preview thumbnail
                             previewImg.src = canvas.toDataURL(mimeType, 0.9);
-                            cropDims.textContent = TARGET_W + '×' + TARGET_H + ' px — Google News uyumlu ✓';
+                            cropDims.textContent = TARGET_W + '×' + TARGET_H + ' px — Google News compatible ✓';
                             previewWrap.classList.remove('hidden');
 
                             closeModal();

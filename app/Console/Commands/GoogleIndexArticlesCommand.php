@@ -10,15 +10,15 @@ use Illuminate\Support\Facades\DB;
 class GoogleIndexArticlesCommand extends Command
 {
     protected $signature = 'google:index-articles
-                            {--type=* : İçerik türleri (varsayılan: guide, analysis, review). Tümü için: --type=all}
-                            {--locale= : Sadece bu dil (örn. tr, en)}
-                            {--limit= : Bu çalıştırmada gönderilecek azami URL (varsayılan: kalan günlük kota)}
-                            {--min-body= : Asgari düz metin gövde uzunluğu (karakter); "uzun" içerikleri süzmek için}
-                            {--force : Daha önce bildirilmiş / güncel olan içerikleri de yeniden gönder}
-                            {--sleep=1 : API çağrıları arasında bekleme (saniye)}
-                            {--dry-run : Hiçbir şey göndermeden gönderilecek URL listesini göster}';
+                            {--type=* : Content types (default: guide, analysis, review). Use --type=all for every type}
+                            {--locale= : Limit processing to this locale (for example: tr, en)}
+                            {--limit= : Maximum URLs to submit in this run (default: remaining daily quota)}
+                            {--min-body= : Minimum plain-text body length in characters for filtering long-form content}
+                            {--force : Resubmit URLs that were already reported or are still current}
+                            {--sleep=1 : Delay between API calls in seconds}
+                            {--dry-run : List eligible URLs without submitting them}';
 
-    protected $description = 'Yayınlanmış makale URL\'lerini toplu olarak Google Indexing API\'ye gönderir (varsayılan: uzun içerik türleri).';
+    protected $description = 'Submit published article URLs to the Google Indexing API in bulk (default: long-form content types).';
 
     /** @var string[] */
     private const LONGFORM_TYPES = ['guide', 'analysis', 'review'];
@@ -26,13 +26,13 @@ class GoogleIndexArticlesCommand extends Command
     public function handle(GoogleIndexingApiService $indexing): int
     {
         if (! $indexing->isConfigured()) {
-            $this->error('Google Indexing yapılandırılmamış: GOOGLE_INDEXING_CREDENTIALS_PATH ile servis hesabı JSON dosyasını ayarlayın.');
+            $this->error('Google Indexing is not configured. Set the service-account JSON path with GOOGLE_INDEXING_CREDENTIALS_PATH.');
 
             return self::FAILURE;
         }
 
         if (! $indexing->isFeatureEnabled()) {
-            $this->warn('GOOGLE_INDEXING_ENABLED=false — CLI ile yine de gönderiliyor (admin butonu kapalı).');
+            $this->warn('GOOGLE_INDEXING_ENABLED=false — the CLI can still submit URLs, but the admin action is disabled.');
         }
 
         $types = $this->resolveTypes();
@@ -46,13 +46,13 @@ class GoogleIndexArticlesCommand extends Command
         $limit = $this->option('limit') !== null ? max(0, (int) $this->option('limit')) : $remaining;
         $budget = $dryRun ? PHP_INT_MAX : min($limit, $remaining);
 
-        $this->line('Türler: <info>'.implode(', ', $types).'</info>'
-            .($locale ? "  Dil: <info>{$locale}</info>" : '')
-            .($minBody > 0 ? "  Min gövde: <info>{$minBody}</info>" : ''));
-        $this->line("Günlük limit: {$indexing->dailyLimit()}  Kullanılan: {$indexing->dailyUsed()}  Kalan: {$remaining}");
+        $this->line('Types: <info>'.implode(', ', $types).'</info>'
+            .($locale ? "  Locale: <info>{$locale}</info>" : '')
+            .($minBody > 0 ? "  Minimum body: <info>{$minBody}</info>" : ''));
+        $this->line("Daily limit: {$indexing->dailyLimit()}  Used: {$indexing->dailyUsed()}  Remaining: {$remaining}");
 
         if (! $dryRun && $budget <= 0) {
-            $this->warn('Bu çalıştırma için kota kalmadı (günlük limit dolu veya --limit=0).');
+            $this->warn('No quota remains for this run (the daily limit was reached or --limit=0).');
 
             return self::SUCCESS;
         }
@@ -109,7 +109,7 @@ class GoogleIndexArticlesCommand extends Command
                 $submitted++;
                 $this->line("  <info>OK</info>   #{$article->id}  {$url}");
             } elseif ($result['message'] === 'daily_limit') {
-                $this->warn('Günlük kotaya ulaşıldı, durduruluyor.');
+                $this->warn('The daily quota has been reached; stopping.');
                 break;
             } else {
                 $failed++;
@@ -123,17 +123,17 @@ class GoogleIndexArticlesCommand extends Command
 
         if ($dryRun) {
             if ($rows === []) {
-                $this->warn('Gönderilecek uygun içerik bulunamadı.');
+                $this->warn('No eligible content was found.');
             } else {
-                $this->table(['ID', 'Tür', 'Dil', 'URL'], $rows);
-                $this->info(count($rows).' URL gönderilebilir (dry-run).');
+                $this->table(['ID', 'Type', 'Locale', 'URL'], $rows);
+                $this->info(count($rows).' URLs are eligible (dry run).');
             }
 
             return self::SUCCESS;
         }
 
         $this->newLine();
-        $this->info("Bitti. Gönderilen: {$submitted}  Atlanan: {$skipped}  Hatalı: {$failed}");
+        $this->info("Finished. Submitted: {$submitted}  Skipped: {$skipped}  Failed: {$failed}");
 
         return $failed > 0 && $submitted === 0 ? self::FAILURE : self::SUCCESS;
     }

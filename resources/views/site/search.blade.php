@@ -76,7 +76,7 @@
             </div>
         @endif
     @else
-        {{-- Henüz arama yapılmadı --}}
+        {{-- No search has been submitted yet. --}}
         <div class="mt-10 rounded-2xl border border-dashed border-stone-300 bg-stone-50/70 p-8 text-center text-stone-400 dark:border-stone-700 dark:bg-stone-900/40 dark:text-stone-500">
             <p class="text-4xl">📰</p>
             <p class="mt-3 text-sm">{{ __('site.search_type_hint') }}</p>

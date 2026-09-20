@@ -62,8 +62,8 @@ class LocalizedNewsSitemapController extends Controller
     }
 
     /**
-     * Son 48 saatteki Google News penceresinde listelenen çeviri satırı sayısı (tüm diller).
-     * Admin özet / readiness ile gerçek sitemap girdileri aynı tanımı kullanır.
+     * Number of translation rows listed in the 48-hour Google News window across all locales.
+     * The admin summary/readiness view and the sitemap entries use the same definition.
      */
     public static function recentNewsTranslationCountAllLocales(): int
     {

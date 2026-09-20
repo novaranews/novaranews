@@ -1,6 +1,6 @@
 {{--
-  Yayın bilgisi + paylaşım çubuğu. Tekrar kullanım: üst (başlık/görsel arası) ve metin sonu.
-  Gerekli: $article, $translation, $shareUrl, $readingMins
+  Publication metadata and share bar, reused above the image and after the article body.
+  Required: $article, $translation, $shareUrl, $readingMins
   Opsiyonel: $bottom (true) - alt bolum icin ust cizgi ve bosluk
 --}}
 @php

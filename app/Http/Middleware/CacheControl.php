@@ -8,58 +8,58 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * HTTP Cache-Control yönetimi.
+ * HTTP Cache-Control policy.
+     *
+ * Three scenarios:
+ *  1. Admin/auth routes       → no-store, private (never cache)
+ *  2. Authenticated user      → private, no-store + novara_auth cookie (Nginx bypass)
+ *  3. Anonymous GET request   → public, s-maxage=300 (Cloudflare + FastCGI cache)
  *
- * Üç senaryo:
- *  1. Admin / auth rotaları      → no-store, private  (asla cache'leme)
- *  2. Giriş yapmış kullanıcı    → private, no-store  + novara_auth cookie (nginx bypass)
- *  3. Anonim GET isteği         → public, s-maxage=300 (Cloudflare + FastCGI cache)
- *
- * nginx FastCGI cache map'i $http_cookie içindeki "novara_auth" cookie'ye bakar;
- * bu cookie yalnızca auth()->check() === true olan yanıtlarda set edilir.
+ * The Nginx FastCGI cache map checks the novara_auth cookie in $http_cookie.
+ * The cookie is set only when auth()->check() is true.
  */
 class CacheControl
 {
-    /** Cloudflare / FastCGI edge TTL (saniye) */
-    private const EDGE_TTL = 300;   // 5 dakika
+    /** Cloudflare/FastCGI edge TTL in seconds. */
+    private const EDGE_TTL = 300;   // 5 minutes
 
-    /** Tarayıcı cache TTL (saniye) */
-    private const BROWSER_TTL = 120; // 2 dakika
+    /** Browser cache TTL in seconds. */
+    private const BROWSER_TTL = 120; // 2 minutes
 
     public function handle(Request $request, Closure $next): Response
     {
         /** @var Response $response */
         $response = $next($request);
 
-        // Yalnızca GET/HEAD — POST/PUT/DELETE/PATCH'e dokunma
+        // Apply only to GET/HEAD; leave POST/PUT/DELETE/PATCH responses untouched.
         if (! $request->isMethodSafe()) {
             return $response;
         }
 
-        // 4xx / 5xx yanıtlara dokunma (hata sayfalarını cache'leme)
+        // Do not cache 4xx/5xx error responses.
         if ($response->getStatusCode() >= 400) {
             return $response;
         }
 
-        // ── Admin rotaları ────────────────────────────────────────────────────
+        // ── Admin routes ──────────────────────────────────────────────────────
         if ($request->is('admin') || $request->is('admin/*')) {
             return $this->noCache($response);
         }
 
-        // ── Kimlik doğrulama rotaları ─────────────────────────────────────────
+        // ── Authentication routes ──────────────────────────────────────────────
         if ($this->isAuthPath($request)) {
             return $this->noCache($response);
         }
 
-        // ── Giriş yapmış kullanıcı ────────────────────────────────────────────
+        // ── Authenticated user ─────────────────────────────────────────────────
         if ($this->hasSessionCookie($request) && auth()->check()) {
             return $this->privateCache($response, $request);
         }
 
-        // ── Anonim ziyaretçi — edge cache'e izin ver ─────────────────────────
+        // ── Anonymous visitor: allow edge caching ──────────────────────────────
         $this->publicCache($response);
 
-        // Çıkış sonrası kalmış olabilecek auth cookie'yi temizle
+        // Remove an authentication marker that may remain after logout.
         if ($request->cookie('novara_auth')) {
             $response->headers->clearCookie('novara_auth', '/', null, $request->secure(), true);
         }
@@ -70,8 +70,8 @@ class CacheControl
     // ─────────────────────────────────────────────────────────────────────────
 
     /**
-     * Kimlik doğrulama / oturum yolları — cache dışı.
-     * (login, register, profile, dashboard, şifre sıfırlama...)
+     * Authentication/session paths that must bypass caching.
+     * Includes login, registration, profile, dashboard, and password reset flows.
      */
     private function isAuthPath(Request $request): bool
     {
@@ -104,7 +104,7 @@ class CacheControl
             || $request->cookies->has('remember_web_'.sha1(config('app.key', '')));
     }
 
-    /** Asla cache'leme */
+    /** Never cache. */
     private function noCache(Response $response): Response
     {
         $response->headers->set('Cache-Control', 'no-store, private');
@@ -114,9 +114,9 @@ class CacheControl
     }
 
     /**
-     * Giriş yapmış kullanıcı: private + novara_auth cookie.
-     * Cookie, nginx FastCGI cache map'inin bypass kararı için kullanılır.
-     * HttpOnly=true → JS erişimi engellenir; nginx raw Cookie header'dan okur.
+     * Authenticated user: private response plus a novara_auth cookie.
+     * The Nginx FastCGI cache map uses the cookie to decide whether to bypass cache.
+     * HttpOnly prevents JavaScript access; Nginx reads it from the raw Cookie header.
      */
     private function privateCache(Response $response, Request $request): Response
     {
@@ -126,7 +126,7 @@ class CacheControl
         $response->headers->setCookie(Cookie::create(
             name    : 'novara_auth',
             value   : '1',
-            expire  : 0,                   // session cookie — tarayıcı kapanınca silinir
+            expire  : 0,                   // Session cookie removed when the browser closes.
             path    : '/',
             secure  : $request->secure(),
             httpOnly: true,
@@ -137,13 +137,12 @@ class CacheControl
     }
 
     /**
-     * Anonim ziyaretçi: Cloudflare ve FastCGI tarafından cache'lenebilir.
-     * stale-while-revalidate → TTL dolunca Cloudflare arka planda yeniler,
-     * kullanıcı beklemiş hissetmez.
-     *
-     * Set-Cookie nginx katmanında kaldırılır (fastcgi_hide_header Set-Cookie).
-     * Anonim sayfa görüntülemesi için session gerekmez; formlardaki CSRF token
-     * app.js → refreshCsrfIfNeeded() ile POST /novara-csrf'den yenileniyor.
+     * Anonymous visitor: cacheable by Cloudflare and FastCGI.
+     * stale-while-revalidate lets Cloudflare refresh in the background after TTL expiry.
+ *
+     * Set-Cookie is removed at the Nginx layer with fastcgi_hide_header Set-Cookie.
+     * Anonymous page views do not need a session. app.js refreshes form CSRF tokens
+     * from POST /novara-csrf through refreshCsrfIfNeeded().
      */
     private function publicCache(Response $response): void
     {

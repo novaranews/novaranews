@@ -3,8 +3,8 @@
 namespace App\Support;
 
 /**
- * Locale altında tek segment olarak kullanılan statik route'lar ve çakışmayı önlemek için
- * Kategori ve makale slug'larında yasaklanan path segmentleri (makale URL öneki dahil).
+ * Static routes that use a single segment below a locale, plus path segments reserved
+ * from category and article slugs to prevent collisions (including article URL prefixes).
  */
 final class ReservedPathSegments
 {

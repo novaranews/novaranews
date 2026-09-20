@@ -42,21 +42,21 @@
             input-class="mt-1.5 w-full max-w-sm rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
         />
         <x-admin.setting-input
-            label="AdSense Makale-İçi Slot ID"
+            label="AdSense in-article slot ID"
             name="adsense_slot_in_article"
             :value="\App\Models\Setting::get('adsense_slot_in_article', '')"
             badge-type="db"
             placeholder="1234567890"
-            hint="Makale gövdesinin hemen altında gösterilecek 'In-article' reklam birimi slot ID'si."
+            hint="Slot ID for the in-article ad unit displayed immediately below the article body."
             input-class="mt-1.5 w-full max-w-sm rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
         />
         <x-admin.setting-input
-            label="AdSense Görüntülü Reklam Slot ID"
+            label="AdSense display ad slot ID"
             name="adsense_slot_display"
             :value="\App\Models\Setting::get('adsense_slot_display', '')"
             badge-type="db"
             placeholder="0987654321"
-            hint="Makale sayfasının altında gösterilecek 'Display' reklam birimi slot ID'si."
+            hint="Slot ID for the display ad unit shown at the bottom of the article page."
             input-class="mt-1.5 w-full max-w-sm rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
         />
     </div>

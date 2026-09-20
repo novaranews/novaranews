@@ -35,7 +35,7 @@ class Comment extends Model
         return $this->belongsTo(Comment::class, 'parent_id');
     }
 
-    /** Onaylanmış yanıtlar (site'de gösterilir) */
+    /** Approved replies displayed on the public site. */
     public function replies(): HasMany
     {
         return $this->hasMany(Comment::class, 'parent_id')
@@ -43,7 +43,7 @@ class Comment extends Model
             ->orderBy('created_at');
     }
 
-    /** Tüm yanıtlar (admin paneli için) */
+    /** All replies displayed in the admin panel. */
     public function allReplies(): HasMany
     {
         return $this->hasMany(Comment::class, 'parent_id')

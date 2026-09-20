@@ -54,7 +54,7 @@ class HomeController extends Controller
                     ->merge($latest->pluck('id'))
                     ->filter()->unique()->values()->all();
 
-                // Gündem: "Son haberler" gridindeki kayıtlar hariç, en son güncellenenler (sekme farkı için ayrı küme)
+                // In focus: recently updated stories excluding the Latest grid, keeping each tab distinct.
                 $trending = Article::query()
                     ->published()
                     ->forLocale($locale)
@@ -68,7 +68,7 @@ class HomeController extends Controller
                     ->merge($trending->pluck('id'))
                     ->filter()->unique()->values()->all();
 
-                // En çok okunan: gerçek okuma sayımı yok; breaking + yenilik önceliği, üstteki iki sekmeden farklı küme
+                // Most read fallback: prioritize breaking and recent stories because view counts are unavailable.
                 $mostRead = Article::query()
                     ->published()
                     ->forLocale($locale)
@@ -82,7 +82,7 @@ class HomeController extends Controller
                 // Sidebar: ilk 5 latest
                 $sidebarTrending = $latest->take(5);
 
-                // Editörün Seçimi: admin panelde işaretlenen yayınlar (en fazla 5)
+                // Editor's picks selected in the admin panel (up to five).
                 $editorsPicks = Article::query()
                     ->published()
                     ->forLocale($locale)
@@ -111,7 +111,7 @@ class HomeController extends Controller
                         ];
                     });
 
-                // Son ~24 saatte yayınlananlar — yatay şerit (okuma sayısı yok; güncellik + son dakika önceliği)
+                // Stories from roughly the last 24 hours for the horizontal strip; prioritize recency and breaking news.
                 $hotToday = Article::query()
                     ->published()
                     ->forLocale($locale)

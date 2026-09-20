@@ -11,7 +11,7 @@ class Category extends Model
     protected $fillable = ['key', 'sort_order'];
 
     /**
-     * Sıralı kategori anahtarları (bot, RSS, doğrulama kuralları).
+     * Ordered category keys used by bots, RSS ingestion, and validation rules.
      */
     public static function orderedKeys(): Collection
     {

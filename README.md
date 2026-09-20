@@ -54,6 +54,8 @@ php artisan serve
 
 Open `http://localhost:8000/admin` and sign in with the administrator account created by the command.
 
+New installations intentionally contain no default administrator, password, or demo articles. Create the first administrator with `novara:create-admin`, then add or import content from the administration area.
+
 On Windows PowerShell, replace `cp .env.example .env` with:
 
 ```powershell
@@ -75,6 +77,10 @@ For production, run a supervised queue worker and configure Laravel's scheduler:
 ```
 
 The example news-fetch and generation schedules in `routes/console.php` are disabled by default. Review their frequency and API costs before enabling them.
+
+## Deployment
+
+For production web-root, permissions, queues, scheduler, proxy, TLS, backup, and update guidance, read [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Redis-specific guidance is available in [docs/REDIS_CACHE_QUEUE.md](docs/REDIS_CACHE_QUEUE.md).
 
 ## Optional integrations
 
@@ -103,6 +109,8 @@ Operators are responsible for copyright, attribution, fact-checking, corrections
 ## Contributing
 
 Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before contributing. Please report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+
+Release history is maintained in [CHANGELOG.md](CHANGELOG.md).
 
 ## Support the project
 

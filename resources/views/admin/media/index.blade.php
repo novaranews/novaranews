@@ -3,9 +3,9 @@
         <div class="admin-toolbar">
             <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-100">{{ __('site.admin_media_library') }}</h2>
             <form action="{{ route('admin.media.optimize-all') }}" method="post"
-                  onsubmit="return confirm('Tüm PNG/JPG dosyaları WebP\'e dönüştürülecek. Devam edilsin mi?')">
+                  onsubmit="return confirm('All PNG/JPG files will be converted to WebP. Continue?')">
                 @csrf
-                <x-admin.btn type="submit" variant="info">Tümünü Optimize Et (→ WebP)</x-admin.btn>
+                <x-admin.btn type="submit" variant="info">Optimize all (→ WebP)</x-admin.btn>
             </form>
         </div>
     </x-slot>

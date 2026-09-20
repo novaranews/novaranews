@@ -52,7 +52,7 @@ class DashboardController extends Controller
         $botEnabled = Setting::get('bot_enabled', true);
         $autoPublish = Setting::get('bot_auto_publish', false);
 
-        // Son 30 günün günlük yayın sayıları (grafik için)
+        // Daily publication totals for the last 30 days (used by the chart).
         $chartData = collect(range(29, 0))->map(function (int $daysAgo) {
             $day = now()->subDays($daysAgo)->toDateString();
             $count = \App\Models\Article::query()
@@ -107,7 +107,7 @@ class DashboardController extends Controller
             foreach (LocalizedSitemapController::TYPES as $type) {
                 $segmentPages = LocalizedSitemapController::pagesCount($locale, $type);
                 $urlPages += $segmentPages;
-                // Sitemap index’te içerik yoksa o tür için dosya yok (0 sayfa).
+                // If the sitemap index has no content, that type has no file (zero pages).
                 $urlExpectedPages += $segmentPages;
             }
         }
@@ -221,7 +221,7 @@ class DashboardController extends Controller
             }
         }
 
-        // Bilinmeyen — UA'nın ilk 60 karakterini göster
+        // Unknown client: show the first 60 characters of the user agent.
         return mb_substr($ua, 0, 60).(mb_strlen($ua) > 60 ? '…' : '');
     }
 

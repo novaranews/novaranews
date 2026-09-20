@@ -7,14 +7,14 @@
 <section class="mx-auto mt-10 max-w-3xl" id="comments" aria-labelledby="comments-heading">
     <div class="border-t border-stone-200 pt-8 dark:border-stone-700">
 
-        {{-- Başarı mesajı --}}
+        {{-- Success message. --}}
         @if(session('comment_status') === 'pending')
             <div class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-900 dark:border-green-800/50 dark:bg-green-950/30 dark:text-green-300">
                 {{ __('site.comment_pending_notice') }}
             </div>
         @endif
 
-        {{-- Onaylı yorumlar --}}
+        {{-- Approved comments. --}}
         @if($comments->isNotEmpty())
             <h2 id="comments-heading" class="font-serif text-xl font-bold text-stone-900 dark:text-stone-100">
                 {{ __('site.comments_heading', ['count' => $comments->count()]) }}
@@ -34,7 +34,7 @@
                         </div>
                         <p class="mt-3 text-sm leading-relaxed text-stone-700 dark:text-stone-300">{!! htmlspecialchars($comment->body, ENT_COMPAT | ENT_HTML5, 'UTF-8') !!}</p>
 
-                        {{-- Yanıtla butonu --}}
+                        {{-- Reply button. --}}
                         <button
                             type="button"
                             class="mt-2 text-xs font-medium text-novara-800 hover:underline dark:text-sky-400"
@@ -42,7 +42,7 @@
                             ↩ {{ __('site.comment_reply') }}
                         </button>
 
-                        {{-- Yanıt formu --}}
+                        {{-- Reply form. --}}
                         <div id="reply-form-{{ $comment->id }}" class="hidden mt-3">
                             <form method="POST" action="{{ $commentUrl }}" id="reply-form-inner-{{ $comment->id }}">
                                 @csrf
@@ -68,7 +68,7 @@
                             </form>
                         </div>
 
-                        {{-- Onaylı yanıtlar --}}
+                        {{-- Approved replies. --}}
                         @if($comment->replies->isNotEmpty())
                             <div class="mt-4 space-y-3 border-l-2 border-stone-200 pl-4 dark:border-stone-700">
                                 @foreach($comment->replies as $reply)
@@ -164,7 +164,7 @@
     var mainToken = document.getElementById('main-g-recaptcha-token');
     if (mainForm && mainToken) executeRecaptcha(mainForm, mainToken);
 
-    // Yanıt formları — dinamik, MutationObserver ile izle
+    // Reply forms are dynamic, so observe them with MutationObserver.
     document.querySelectorAll('[id^="reply-form-inner-"]').forEach(function (form) {
         var tokenInput = form.querySelector('.g-recaptcha-token');
         if (tokenInput) executeRecaptcha(form, tokenInput);

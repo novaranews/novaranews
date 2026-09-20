@@ -61,7 +61,7 @@
                                     {{-- Yorum metni --}}
                                     <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">{{ $comment->body }}</p>
 
-                                    {{-- Yanıtlar --}}
+                                    {{-- Replies --}}
                                     @php $replies = $comment->allReplies()->with('article')->get(); @endphp
                                     @if($replies->isNotEmpty())
                                         <div class="mt-3 space-y-2 border-l-2 border-gray-200 pl-3 dark:border-gray-600">

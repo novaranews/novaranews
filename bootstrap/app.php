@@ -24,8 +24,8 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\CacheControl::class,
         ]);
 
-        // /novara-csrf endpoint'i CSRF doğrulaması dışında tut.
-        // POST olduğundan FastCGI / Cloudflare cache'lemez; kendi token'ını döner.
+        // Exclude /novara-csrf from CSRF validation.
+        // It is a POST endpoint, so FastCGI and Cloudflare do not cache it; it returns its own token.
         $middleware->validateCsrfTokens(except: [
             'novara-csrf',
             'mcp',

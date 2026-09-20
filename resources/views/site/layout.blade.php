@@ -39,7 +39,7 @@
     <link rel="apple-touch-icon" href="{{ $appleTouchIconUrl }}">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ $appleTouchIconPngUrl }}">
     @hasSection('canonical')
-        {{-- e() ile & -> &amp; (HTML özelliği için geçerli kaçış); ham @yield kaçışsız bırakıyordu --}}
+        {{-- e() escapes ampersands correctly for HTML attributes; the previous raw @yield did not. --}}
         <link rel="canonical" href="{{ $__env->yieldContent('canonical') }}">
     @else
         <link rel="canonical" href="{{ url()->current() }}">
@@ -63,12 +63,12 @@
     @include('site.partials.ga4')
 </head>
 <body class="tech-site-bg min-h-full text-stone-900 antialiased font-sans transition-colors duration-200 dark:text-stone-100">
-    {{-- ─── İçeriğe geç (erişilebilirlik) ─────────────────────────────────── --}}
+    {{-- ─── Skip to content (accessibility) ──────────────────────────────── --}}
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-novara-800 focus:shadow-lg focus:ring-2 focus:ring-novara-800 dark:focus:bg-stone-900 dark:focus:text-sky-400 dark:focus:ring-sky-400">
         {{ __('site.skip_to_content') }}
     </a>
 
-    {{-- ─── Okuma ilerleme çubuğu (genişlik app.js) ──────────────────────── --}}
+    {{-- ─── Reading progress bar (width is managed by app.js) ────────────── --}}
     <div
         id="nv-reading-progress"
         class="fixed left-0 top-0 z-[100] h-0.5 bg-novara-800 transition-[width] duration-75 dark:bg-sky-400"

@@ -614,13 +614,12 @@ function initMobileNav() {
 }
 
 /**
- * Cache'lenmiş sayfalarda CSRF token yenile.
+ * Refresh the CSRF token on cached pages.
  *
- * Sayfa FastCGI veya Cloudflare cache'inden geldiğinde HTML'deki _token inputu
- * başka bir kullanıcıya ait olabilir → 419 hatası.
- * Bu fonksiyon sayfa yüklenince POST /novara-csrf'den güncel token'ı çekip
- * tüm form input[name="_token"] alanlarını ve meta csrf-token etiketini günceller.
- * Çağrı yalnızca sayfada @csrf formu varsa yapılır.
+ * When HTML comes from FastCGI or Cloudflare cache, its _token input may belong
+ * to another session and cause a 419 response. On page load, this function fetches
+ * a current token from POST /novara-csrf and updates every _token input and the
+ * csrf-token meta tag. The request runs only when the page contains an @csrf form.
  */
 async function refreshCsrfIfNeeded() {
     const tokenInputs = document.querySelectorAll('input[name="_token"]');
@@ -636,19 +635,19 @@ async function refreshCsrfIfNeeded() {
         const { token } = await res.json();
         if (!token) return;
 
-        // Tüm @csrf input'larını güncelle (ana form + yanıt formları)
+        // Update every @csrf input, including primary and reply forms.
         tokenInputs.forEach((el) => { el.value = token; });
 
-        // Meta csrf-token etiketini güncelle (axios ve diğer kütüphaneler için)
+        // Update the csrf-token meta tag for Axios and other libraries.
         const meta = document.querySelector('meta[name="csrf-token"]');
         if (meta) meta.setAttribute('content', token);
 
-        // Axios kullanılıyorsa header'ı da güncelle
+        // Update Axios's default header when Axios is available.
         if (window.axios?.defaults?.headers?.common !== undefined) {
             window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
         }
     } catch {
-        // Sessizce başarısız ol — kullanıcı deneyimi bozulmasın
+        // Fail silently so a refresh issue does not disrupt the user experience.
     }
 }
 
@@ -675,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Cache'lenmiş sayfalarda CSRF token'ını yenile (formlar için)
+    // Refresh form CSRF tokens on cached pages.
     refreshCsrfIfNeeded();
 
     const deferInit = () => {

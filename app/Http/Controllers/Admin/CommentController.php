@@ -15,7 +15,7 @@ class CommentController extends Controller
         $filter = $request->input('filter', 'pending');
 
         $query = Comment::with(['article'])
-            ->whereNull('parent_id') // Önce üst yorumları göster
+            ->whereNull('parent_id') // Show top-level comments first.
             ->orderByDesc('created_at');
 
         if ($filter === 'pending') {
@@ -36,7 +36,7 @@ class CommentController extends Controller
     {
         $comment->update(['approved' => true]);
 
-        // Yanıtları da otomatik onayla değil — her biri ayrı onaylanır
+        // Do not auto-approve replies; each reply is reviewed separately.
         return back()->with('status', __('site.admin_comment_approved'));
     }
 
@@ -49,7 +49,7 @@ class CommentController extends Controller
 
     public function destroy(Comment $comment): RedirectResponse
     {
-        $comment->delete(); // cascadeOnDelete ile yanıtları da silinir
+        $comment->delete(); // Replies are removed by cascadeOnDelete.
 
         return back()->with('status', __('site.admin_comment_deleted'));
     }

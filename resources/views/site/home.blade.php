@@ -5,8 +5,7 @@
 
 @push('meta')
     <x-site.seo-meta :seo="$seo" />
-    {{-- Hero görselini preload — LCP'yi hızlandırır.
-         imagesrcset/imagesizes eklenerek mobilde yanlış boyutun preload edilmesi önlenir. --}}
+    {{-- Preload the hero image to improve LCP. imagesrcset/imagesizes prevents mobile clients from preloading the wrong size. --}}
     @if(isset($hero) && $hero && $hero->featured_image)
         @php
             $__heroSrc   = Storage::url($hero->featured_image);
@@ -45,7 +44,7 @@
 
 @section('content')
 @php
-    /* ── Kategori renk haritası ────────────────────────────── */
+    /* ── Category color map ────────────────────────────────── */
     $catColorMap = [
         'world'                   => 'bg-novara-800',
         'politics'                => 'bg-novara-800',
@@ -59,7 +58,7 @@
     ];
     $catColor = fn (?string $key): string => $catColorMap[$key ?? ''] ?? 'bg-stone-700';
 
-    /* ── Yazar avatar yardımcıları ─────────────────────────── */
+    /* ── Author avatar helpers ─────────────────────────────── */
     $avatarColors    = ['bg-novara-800', 'bg-blue-600', 'bg-emerald-600', 'bg-violet-600', 'bg-teal-600', 'bg-rose-500'];
     $avatarBg        = fn (?string $name): string => $name
         ? $avatarColors[abs(crc32($name)) % count($avatarColors)]
@@ -68,7 +67,7 @@
         ? collect(explode(' ', trim($name)))->map(fn ($w) => strtoupper(mb_substr($w, 0, 1)))->take(2)->join('')
         : 'N';
 
-    /* ── Okuma süresi ──────────────────────────────────────── */
+    /* ── Reading time ──────────────────────────────────────── */
     $readTime = fn (string $body): int => max(1, (int) ceil(str_word_count(strip_tags($body)) / 220));
     $latestUpdatedAt = $side->first()?->published_at ?? $hero?->published_at ?? null;
 @endphp
@@ -80,7 +79,7 @@
     ═══════════════════════════════════════════════════════ --}}
     <div class="nv-reveal grid gap-5 lg:grid-cols-[1.6fr_1fr]">
 
-        {{-- ── Büyük Hero Kartı ── --}}
+        {{-- ── Large hero card ── --}}
         @if($hero)
             @php $ht = $hero->translate(); $hc = $hero->category?->translate(); $heroUrl = $hero->publicUrl(); @endphp
             @if($ht && $hc)
@@ -293,7 +292,7 @@
     @endif
 
     {{-- ══════════════════════════════════════════════════════
-         ANA İÇERİK + SIDEBAR
+         MAIN CONTENT + SIDEBAR
     ═══════════════════════════════════════════════════════ --}}
     <div class="nv-reveal mt-12 items-start gap-8 lg:grid lg:grid-cols-[minmax(0,1fr)_320px]">
 
@@ -312,7 +311,7 @@
             class="mt-10 rounded-xl border border-stone-200 bg-stone-50/80 p-4 dark:border-stone-700/60 dark:bg-stone-900/40"
         >
             @include('site.partials.section-header', ['title' => __('site.home_hot_today')])
-            {{-- Tam genişlik şerit + kartlar sola yaslı; oklar üstte (layout sütunu yok) --}}
+            {{-- Full-width strip with left-aligned cards and controls above. --}}
             <div class="relative">
                 @if($hotToday->count() > 1)
                     <x-site.btn
@@ -386,7 +385,7 @@
         {{-- ── SIDEBAR ── --}}
         <aside class="mt-10 space-y-8 lg:mt-0">
 
-            {{-- Numaralı Trending Listesi --}}
+            {{-- Numbered trending list. --}}
             @if($sidebarTrending->isNotEmpty())
             <div>
                 @include('site.partials.section-header', ['title' => __('site.trending'), 'class' => 'mb-0'])
@@ -416,7 +415,7 @@
             </div>
             @endif
 
-            {{-- Editörün Seçimi --}}
+            {{-- Editor's picks. --}}
             @if($editorsPicks->isNotEmpty())
             <div>
                 @include('site.partials.section-header', ['title' => __('site.editors_picks'), 'class' => 'mb-0'])

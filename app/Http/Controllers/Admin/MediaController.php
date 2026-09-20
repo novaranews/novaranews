@@ -127,7 +127,7 @@ class MediaController extends Controller
         }
 
         return redirect()->route('admin.media.index')
-            ->with('success', "{$optimized} görsel optimize edildi, thumbnail'lar yenilendi ve makale içerikleri güncellendi.");
+            ->with('success', "{$optimized} images were optimized, thumbnails were regenerated, and article content was updated.");
     }
 
     public function destroy(Request $request): RedirectResponse

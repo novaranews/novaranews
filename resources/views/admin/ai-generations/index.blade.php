@@ -16,7 +16,7 @@
                 <div class="rounded border border-red-200 bg-red-50 px-4 py-3 text-red-800">{{ $errors->first() }}</div>
             @endif
 
-            {{-- ═══ BOT KONTROL PANELİ ═══ --}}
+            {{-- ═══ BOT CONTROL PANEL ═══ --}}
             <div class="admin-card border-indigo-200 dark:border-indigo-800">
                 <div class="border-b border-indigo-100 bg-indigo-50 px-6 py-4 dark:border-indigo-800 dark:bg-indigo-500/10">
                     <div class="flex items-center justify-between">
@@ -88,7 +88,7 @@
                 </form>
             </div>
 
-            {{-- ═══ MANUEL ÜRETİM (Analiz & Rehber) ═══ --}}
+            {{-- ═══ MANUAL GENERATION (ANALYSIS & GUIDE) ═══ --}}
             <div class="admin-card border-amber-200 dark:border-amber-800">
                 <div class="border-b border-amber-100 bg-amber-50 px-6 py-4 dark:border-amber-800 dark:bg-amber-500/10">
                     <h3 class="text-base font-semibold text-amber-900 dark:text-amber-300">{{ __('site.admin_manual_generation_title') }}</h3>
@@ -145,7 +145,7 @@
                 </form>
             </div>
 
-            {{-- ═══ FİLTRELER ═══ --}}
+            {{-- ═══ FILTERS ═══ --}}
             <div class="flex flex-wrap items-center gap-3 rounded border border-gray-200 bg-white px-4 py-3">
                 {{-- Filtre formu --}}
                 <form method="get" class="flex flex-wrap items-center gap-3">
@@ -166,7 +166,7 @@
                     <x-admin.btn :href="route('admin.ai-generations.index')">{{ __('site.common_reset') }}</x-admin.btn>
                 </form>
 
-                {{-- Temizleme butonları - ayrı formlar, iç içe değil --}}
+                {{-- Cleanup buttons use separate, non-nested forms. --}}
                 <div class="ml-auto flex gap-2">
                     <form method="post" action="{{ route('admin.ai-generations.clear-status') }}"
                           data-confirm="{{ __('site.admin_confirm_clear_pending') }}"
@@ -201,7 +201,7 @@
                 <x-admin.btn type="button" onclick="clearSelection()" class="px-2 py-1 text-xs">{{ __('site.admin_clear_selection') }}</x-admin.btn>
             </div>
 
-            {{-- ═══ LİSTE ═══ --}}
+            {{-- ═══ LIST ═══ --}}
             <div class="admin-table-wrap">
                 <table class="min-w-full divide-y divide-gray-200 text-sm">
                     <thead class="bg-gray-50 text-left text-xs uppercase text-gray-500">
