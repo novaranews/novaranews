@@ -1,10 +1,18 @@
 # NovaNews
 
+[![CI](https://github.com/novaranews/novaranews/actions/workflows/ci.yml/badge.svg)](https://github.com/novaranews/novaranews/actions/workflows/ci.yml)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
+[![PHP 8.2+](https://img.shields.io/badge/PHP-8.2%2B-777BB4.svg)](https://www.php.net/)
+
 ![NovaNews](public/og-default.jpg)
 
 NovaNews is an open-source, multilingual news publishing platform built with Laravel. It combines a newsroom-oriented CMS with RSS ingestion, optional AI-assisted article generation, editorial controls, Google News SEO, and a responsive public site.
 
 > **Early open-source release:** NovaNews is production-derived software that is being generalized for community use. Review the security and deployment notes before exposing a new installation to the internet.
+
+## Live demo
+
+Explore the public demo at [novaranews.com](https://novaranews.com). The site is maintained as a demonstration of the open-source project; editorial updates are not guaranteed.
 
 ## Highlights
 
@@ -95,6 +103,10 @@ Operators are responsible for copyright, attribution, fact-checking, corrections
 ## Contributing
 
 Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before contributing. Please report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+
+## Support the project
+
+If NovaNews is useful to you, you can support its continued maintenance with a [cryptocurrency donation](https://plisio.net/donate/jYjnfaHi). Contributions are optional and do not affect access to the project or its AGPL license.
 
 ## License
 
